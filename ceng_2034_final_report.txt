@@ -1,0 +1,133 @@
+\documentclass[onecolumn]{article}
+%\usepackage{url}
+%\usepackage{algorithmic}
+\usepackage[a4paper]{geometry}
+\usepackage{datetime}
+\usepackage[margin=2em, font=small,labelfont=it]{caption}
+\usepackage{graphicx}
+\usepackage{mathpazo} % use palatino
+\usepackage[scaled]{helvet} % helvetica
+\usepackage{microtype}
+\usepackage{amsmath}
+\usepackage{subfigure}
+% Letterspacing macros
+\newcommand{\spacecaps}[1]{\textls[200]{\MakeUppercase{#1}}}
+\newcommand{\spacesc}[1]{\textls[50]{\textsc{\MakeLowercase{#1}}}}
+
+\title{\spacecaps{Assignment Report 2: Multiprocess Implementation}\\ \normalsize \spacesc{CENG2034, Operating Systems} }
+
+\author{Çilem Emre\\cilememre10@gmail.com}
+%\date{\today\\\currenttime}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+The basis of learning the operating system begins with learning the processes. In this assignment, I produced parent and child processes and looked at their pid. I downloaded some files with the function using child process from a given url list. I used the uuid library for this. I avoid the orphan process with the waitpid command of the os library and checked which files are duplicate using the hashlib library. With this assignment, we learned new process types and made many comparisons. This assignment was a ladder to grasp the processes correctly.
+\end{abstract}
+
+
+\section{Introduction}
+This task was very important because we saw many types of processes, compared them and learned how to use them. We grasped the working logic of multiprocesses and used different libraries. Processes form the basis of the operating system and this application has contributed a lot to my understanding of processes.
+
+\section{Assignments}
+The steps I did in this assignment were briefly to first create a new parent and child process and print their pid. Then I downloaded the files in the url provided with the child process I created. I tried to avoid the Orphan process situation and I wrote a function that found duplicate among the files I downloaded and did it using the multiprocess technique. I clearly explained how I handle these steps below.
+
+\subsection{Assignment: Python script with processes}
+
+What I used in this project:
+
+CPU Features: Intel(R) Core(TM) i7-7500U CPU @ 2.70GHz
+
+Core and Thread Count: 4
+
+OS: Linux Ubuntu 18.04.1 LTS
+
+Programming Language: Pyhton 3.6
+
+\subsection*{Problems}
+
+\subsection*{2.1.1. Creating a new child process with syscall and print its PID }
+
+In this part, I created a parent and child process using the "os" module. I used the "fork" command. When the fork command was called, two copies were created from the same program. Since I know that pid is parent process when it is 1, child process is 0 so I found the child process with the if else condition and finally I printed its pid.
+
+\includegraphics[scale=0.35]{childprocess.png}
+
+\subsection*{2.1.2. With the child process, downloading the files via the given URL list }
+
+There was a list of urls given to us. I wrote a function that downloads files using this url list argument. I used the "os", "uuid" and "requests" modules for this function. After checking the child process, I called the function here. It downloaded each url. Continuing under the child process, I made this process with the child process. Then I created a new list of downloaded files and printed them out.
+
+\includegraphics[scale=0.35]{downloadfile.png}
+\includegraphics[scale=0.35]{down_files.png}
+
+\subsection*{2.1.3. Avoiding the orphan process situation }
+
+Orphan process is the situation when the parent finishes before child. For this part, I wrote os.waitpid(pid, 0) in the if block where there is a parent process. When I write this, parent process waits for child proces so I don't have the orphan process situation.
+
+\subsection*{2.1.4. Controlling the duplicate files within the downloaded files}
+
+
+In this section, firstly, I wrote a function that finds  the duplicate files. This function checks each document in the downloaded file and adds it with the "insert" command if it's the second time from the same document. In this part, I used the multiprocess technique with the pool object in the if part. Each element in the file was checked with the md5 function I found on the internet and loaded into the a list. I used the hashlib library for the md5 function. The elements registered in the a list were checked with the multiprocess technique and the duplicate ones were added to a new list2 list. I recently removed the non-unique ones and printed these duplicate files on the screen. I added the code scripts below.
+
+\includegraphics[scale=0.35]{find_dupliii.png}
+\includegraphics[scale=0.35]{md5.png}
+
+
+\subsection*{Notes} % the star suppresses numbering of sections and subsections
+
+First, I printed the CPU and load avg list on the machine I used like this:
+
+\includegraphics[scale=0.35]{cpu.png}
+
+I added a line of code into the function where I downloaded the files like this:
+
+\includegraphics[scale=0.35]{dfpid.png}
+
+
+This line of code proved that I had downloaded my file with the child process. Their pid were equal.
+
+
+In addition, I added a line of code into to my function that finds duplicate files. This proved that I used the multiprocess technique while doing this. Their pid are different from each other.
+
+\includegraphics[scale=0.35]{fdpid.png}
+
+Initially, I wrote a command that found start time and added a line of code that shows how many seconds all of these operations.
+
+\includegraphics[scale=0.35]{timetaken.png}
+
+\section{Results}
+I got this output showing parent and child pids.
+It shows a list of downloaded files, the pids of the processes in the functions, duplicate files list and taken time.
+
+
+\includegraphics[scale=0.35]{Screenshot from 2020-05-31 01-47-09.png}
+
+
+\section{Conclusion}
+
+I learned a lot with this task. One of the first things I learned; in multiprocessing, multiple processes or jobs can be run and managed by the CPU or a single program. Python's multiprocessing library has a number of powerful process spawning features which completely side-step issues.
+
+There are two possibilities for the return value after the fork () function is called. It will be either equal to or greater than 0. Negative return only means that the function is incorrect. If it is positive, the return value for the child process is 0, while the return value for the parent process is 1. When you do a fork(), it copies everything in memory. That includes any globals you’ve set in imported Python modules.
+
+I used the multiprocess technique with the pool object because pool is most useful for large amounts of processes where each process can execute quickly, while process is most useful for a small number of processes where each process would take a longer time to execute. To use the Pool class, we have to create a separate function that takes a list item as an argument like we did when using process. 
+
+With this task, I learned what the orphan process is and how it is avoided. Every running process job ends on its own. However, when the parent process creates a child process, if it is not desired to end before the child process, that is, if we want to avoid the orphan process, the child process is expected to terminate first using the waitpid () system call.
+
+When I ran the codes, I noticed that the pids were written in a different and different order. There’s no guarantee that the first process to be created will be the first to start or complete. As a result, multiprocessed code usually executes in a different order each time it is run, even if each result is always the same.
+
+In addition, I learned the contents of different libraries such as hashlib and uuid.
+
+This homework was very useful and made me understand how processes work. We cannot grasp the operating system without learning the processes so it was a great chance to do such a task to learn the processes and operating system in the technology age.
+
+\section{My github username}
+
+cilememre24
+
+
+\nocite{*}
+\bibliographystyle{plain}
+\bibliography{references}
+\end{document}
+
+
